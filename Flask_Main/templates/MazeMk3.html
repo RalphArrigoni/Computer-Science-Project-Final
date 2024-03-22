@@ -1,0 +1,231 @@
+<head>
+    <style  id = styler>
+        .grid-container {
+            display: inline-grid;
+             column-gap: 0px;
+              row-gap: 0px;
+               background-color: #000000;
+                padding: 5px;
+        }
+        .grid-item {
+            background-color: rgba(255, 255, 255, 1.0);
+               border: 0px solid rgba(0, 0, 0, 1.0);
+                padding: 0px;
+        }
+        .grid-space {
+            background-color: rgba(40, 50, 200, 1.0);
+              padding:0px;
+            }
+        .wall-remove {
+            background-color: rgba(255, 255, 255, 1.0);
+        }
+        .highlighted{
+            background-color: rgba(255, 180, 255, 1.0);
+        }
+    </style>
+
+
+    <script>
+    var randomInt = Math.floor(Math.random() * 4);
+    const x = Number(prompt("enter number between 2 and 50"))
+    function gridnumber() {
+        document.getElementById("demo").innerHTML = x
+    }
+    var visitedNodes = [1]
+    var removeableNodes = [1]
+    var triedDirections = []
+    var length = visitedNodes.length
+    var area = length*2
+    var currentDiv = 1
+    var reversePoint = 0
+    var backlength = 2
+    var currentCellSide = 2
+    function removeWall() {
+        var currentWall = document.getElementsByTagName("div")[currentCellSide];
+        currentWall.outerHTML = "<div class=\"wall-remove\"></div>"
+    }
+    function visitedCell() {
+        var element = document.getElementsByTagname("div")[currentCell];
+        element.classList.add("mystyle");
+    }
+    function moveDown(){
+                var possibleDiv = currentDiv + (2*(2*x - 1));
+                var listCheck = possibleDiv;
+
+                if (visitedNodes.includes(listCheck) == false){
+                    var currentCellSide = currentDiv + (2*x - 1);
+                    var currentWall = document.getElementsByTagName("div")[currentCellSide];
+                    currentWall.outerHTML = "<div class=\"wall-remove\"></div>"
+                    currentDiv = currentDiv + (4*x-2);
+                    visitedNodes.push(currentDiv);
+                    removeableNodes.push(currentDiv);
+                    reversePoint = 0;
+                    triedDirections.pop("D")
+                           }
+                }
+
+
+
+    function moveUp(){
+                var possibleDiv = currentDiv - (2*(2*x-1));
+                var listCheck = possibleDiv;
+
+                if (visitedNodes.includes(listCheck) == false){
+                    var currentCellSide = currentDiv - (2*x - 1);
+                    var currentWall = document.getElementsByTagName("div")[currentCellSide];
+                    currentWall.outerHTML = "<div class=\"wall-remove\"></div>"
+                    currentDiv = currentDiv - (4*x-2);
+                    visitedNodes.push(currentDiv);
+                    removeableNodes.push(currentDiv);
+                    reversePoint = 0;
+                    triedDirections.pop("U")
+                            }
+
+
+        }
+
+    function moveRight(){
+
+                var possibleDiv = currentDiv + 2;
+                var listCheck = possibleDiv;
+
+                if (visitedNodes.includes(listCheck) == false){
+                    var currentCellSide = currentDiv + 1;
+                    var currentWall = document.getElementsByTagName("div")[currentCellSide];
+                    currentWall.outerHTML = "<div class=\"wall-remove\"></div>"
+                    currentDiv = currentDiv + 2;
+                    visitedNodes.push(currentDiv);
+                    removeableNodes.push(currentDiv);
+                    reversePoint = 0
+                triedDirections.pop("R")
+
+                }
+
+
+        }
+
+    function moveLeft(){
+                var possibleDiv = currentDiv - 2;
+                var listCheck = possibleDiv;
+
+                if (visitedNodes.includes(listCheck) == false){
+                    var currentCellSide = currentDiv - 1;
+                    var currentWall = document.getElementsByTagName("div")[currentCellSide];
+                    currentWall.outerHTML = "<div class=\"wall-remove\"></div>"
+                    currentDiv = currentDiv - 2;
+                    visitedNodes.push(currentDiv);
+                    removeableNodes.push(currentDiv);
+                    reversePoint = 0;
+                    triedDirections.pop("L")
+                    }
+
+
+        }
+    function backSpace(){
+            var normalise = document.getElementsByTagName("div")[currentDiv];
+            normalise.outerHTML = "<div class=\"grid-item\"></div>";
+            removeableNodes.pop();
+            currentDiv = removeableNodes[removeableNodes.length - 1];
+            var highlighted = document.getElementsByTagName("div")[currentDiv];
+            highlighted.outerHTML = "<div class=\"highlighted\"></div>"
+            triedDirections.pop()
+            triedDirections.pop()
+            triedDirections.pop()
+            triedDirections.pop()
+            }
+    function createGridCells() {
+        var y = document.getElementsByTagName("p2")[0];
+        square = "<div class=\"grid-item\"></div>"
+        wall = "<div class=\"grid-space\"></div>"
+        let z = ((square + wall))
+        a = z.repeat(x-1)
+        b = a + square
+        c = wall.repeat(x*2 - 1)
+        d = b + c
+        e = d.repeat(x-1)
+        f = e + d
+        g = f + square
+        y.outerHTML = f
+    }
+    function createGridSize() {
+        var pixelNum = "45px 5px "
+        columnsAndRows = pixelNum.repeat(x-1)
+        declaration = document.styleSheets[0].cssRules[0].style;
+        setprop = declaration.setProperty("grid-template-columns", columnsAndRows + "45px");
+        declarationTwo = document.styleSheets[0].cssRules[0].style;
+        setpropTwo = declarationTwo.setProperty("grid-template-rows", columnsAndRows + "45px");
+    }
+
+
+    function runMaze(){
+        while (removeableNodes.length != 0){
+            var randomInt = Math.floor(Math.random() * 5);
+            var normalise = document.getElementsByTagName("div")[currentDiv];
+            normalise.outerHTML = "<div class=\"grid-item\"></div>";
+            if (triedDirections.includes("U") == true && triedDirections.includes("D") == true && triedDirections.includes("L") == true && triedDirections.includes("R") == true){
+                backSpace()
+            }
+            if (randomInt == 1 && currentDiv%(2*x-1) != 0){
+                moveRight();}
+            if(randomInt == 1 && triedDirections.includes("R") == false){
+                    triedDirections.push("R")
+                    }
+
+            if (randomInt == 2 && currentDiv%(2*x-1) != 1){
+                moveLeft();}
+            if(randomInt == 2 && triedDirections.includes("L") == false  ){
+                    triedDirections.push("L")
+                    }
+
+            if (randomInt == 3 && currentDiv - (2*x-1) > 0 ){
+                moveUp();}
+            if(randomInt == 3 && triedDirections.includes("U") == false){
+                    triedDirections.push("U")
+                    }
+
+            if (randomInt == 4 && currentDiv + (2*x-1) < ((2*x-1)*(2*x-1))){
+                moveDown();}
+            if(randomInt == 4 && triedDirections.includes("D") == false){
+                    triedDirections.push("D")
+                    }
+            var highlighted = document.getElementsByTagName("div")[currentDiv];
+            highlighted.outerHTML = "<div class=\"highlighted\"></div>"
+
+        }
+
+        }
+
+
+
+
+
+    </script>
+</head>
+
+<body>
+
+    <p id="demo"> Invalid Input, Reload the page</p>
+    <p id="demos"> </p>
+
+
+
+
+
+
+
+    <div id = "ligma" class="grid-container">
+
+    <p2></p2>
+    </div>
+    <script>
+    if (x < 51){
+    createGridSize()
+    createGridCells()
+    runMaze()
+document.getElementById("demo").innerHTML = "";
+    }
+
+
+
+    </script>
+</body>
